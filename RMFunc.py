@@ -8,7 +8,7 @@ def have_file(file) :
     
     b = 0
     d = 0
-    while b <= 500 :
+    while b <= 300 :
         get = os.path.isfile(file)
         if get == True :
             break
