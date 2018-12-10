@@ -8,22 +8,21 @@ def have_file(file) :
     
     b = 0
     d = 0
-    while b <= 300 :
+    while b <= 500 :
         get = os.path.isfile(file)
         if get == True :
             break
         time.sleep(0.01)
         d += 0.01
         b += 1
-    
+        root.update_idletasks()
     d = str(round(d,2))
     
     if get == True :
-        debug = 'have file: ' + file + ' after ' + d + ' seconds.\n'
+        write_debug('have file: ' + file + ' after ' + d + ' seconds.\n')
     else :   
-        debug = 'do not have file: ' + file + ' after ' + d + ' seconds.\n'
+        write_debug('do not have file: ' + file + ' after ' + d + ' seconds.\n')
         
-    write_debug(debug)
     return(get)
 
 
@@ -36,8 +35,8 @@ def delete_file(file) :
     did = not os.path.isfile(file)
     
     if did :
-        debug = 'did not find: ' + file + ' to delete.\n'
-        write_debug(debug)
+        write_debug('did not find: ' + file + ' to delete.\n')
+        
         return(did)
 
     a = 0
@@ -47,16 +46,16 @@ def delete_file(file) :
         except OSError :
             time.sleep(0.01)
         a += 0.01
-
+        root.update_idletasks()
+        
     a = str(round(a,2))
     
     did = not os.path.isfile(file)
     if did :
-        debug = 'did delete: ' + file + ' after ' + a + ' seconds.\n'
+        write_debug('did delete: ' + file + ' after ' + a + ' seconds.\n')
     else :
-        debug = 'could not delete: ' + file + ' after ' + a + ' seconds and file exists = ' + str(os.path.isfile(file)) + '.\n'
+        write_debug('could not delete: ' + file + ' after ' + a + ' seconds and file exists = ' + str(os.path.isfile(file)) + '.\n')
 
-    write_debug(debug)
     return(did)
 
 
@@ -78,15 +77,15 @@ def is_locked(file):
             locked = True
             time.sleep(0.01)
         d += 0.01
+        root.update_idletasks()
 
     d = str(round(d,2))
     
     if locked :
-        debug = file + ' is still locked after ' + d + ' seconds.\n'
+        write_debug(file + ' is still locked after ' + d + ' seconds.\n')
     else :
-        debug = file + ' is not locked after ' + d + ' seconds.\n'
+        write_debug(file + ' is not locked after ' + d + ' seconds.\n')
 
-    write_debug(debug)
     return (locked)
 
 
@@ -116,16 +115,15 @@ def read_file(file,delete) :
             data = data + [e]
             a += 1
         b.close()
-        debug = 'Did read ' + str(a) + ' lines from: ' + file + '.\n'
+        write_debug('Did read ' + str(a) + ' lines from: ' + file + '.\n')
     except OSError :
-        debug = 'Did not read ' + file + ' and exists = ' + str(os.path.isfile(file)) + '.\n'
+        write_debug('Did not read ' + file + ' and exists = ' + str(os.path.isfile(file)) + '.\n')
     
     if delete :
         delete_file(file)
     else :
-        debug = debug + 'Did not attempt to delete ' + file + 'and exists = ' + str(os.path.isfile(file)) + '.\n'
+        write_debug('Did not attempt to delete ' + file + ' and exists = ' + str(os.path.isfile(file)) + '.\n')
     
-    write_debug(debug)
     return(data)
 
 
@@ -141,18 +139,24 @@ def comm1(command) :
     cmd.write(command)
     cmd.close()
     
-    debug = 'Wrote: ' + command + ' to ' + rask + '.\n'
+    cmdis = command.splitlines()[0]
+    
+    write_debug('Wrote command: ' + cmdis + ' to ' + rask + '.\n')
+    
+    line = 1
+    for i in command.splitlines() :
+        write_debug('rask line ' + str(line) + ': ' + i + '\n')
+        line += 1
     
     reply = read_file(rans,True)
     
     if reply != [] :
-        debug = debug + 'Completed command: ' + command + '.\n'
+        write_debug('Completed command: ' + cmdis + '.\n')
         line = 1
         for i in reply :
-            debug = debug + 'rans line ' + str(line) + ': ' + i + '\n'
+            write_debug('rans line ' + str(line) + ': ' + i + '\n')
             line += 1
     else :
-        debug = debug + 'Did not complete command: ' + command + ' successfully.\n'
+        write_debug('Did not complete command: ' + cmdis + ' successfully.\n')
     
-    write_debug(debug)
     return(reply)
