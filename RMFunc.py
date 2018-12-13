@@ -15,7 +15,6 @@ def have_file(file) :
         time.sleep(0.01)
         d += 0.01
         b += 1
-        root.update_idletasks()
     d = str(round(d,2))
     
     if get == True :
@@ -46,7 +45,6 @@ def delete_file(file) :
         except OSError :
             time.sleep(0.01)
         a += 0.01
-        root.update_idletasks()
         
     a = str(round(a,2))
     
@@ -77,7 +75,6 @@ def is_locked(file):
             locked = True
             time.sleep(0.01)
         d += 0.01
-        root.update_idletasks()
 
     d = str(round(d,2))
     
@@ -159,4 +156,5 @@ def comm1(command) :
     else :
         write_debug('Did not complete command: ' + cmdis + ' successfully.\n')
     
+    rootque.put('kill')
     return(reply)
