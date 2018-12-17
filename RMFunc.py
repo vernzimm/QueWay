@@ -130,31 +130,38 @@ def read_file(file,delete) :
 
 def comm1(command) :
     
-    delete_file(rans)
+    retries = retrycnt
     
-    cmd = open(rask,'w')
-    cmd.write(command)
-    cmd.close()
-    
-    cmdis = command.splitlines()[0]
-    
-    write_debug('Wrote command: ' + cmdis + ' to ' + rask + '.\n')
-    
-    line = 1
-    for i in command.splitlines() :
-        write_debug('rask line ' + str(line) + ': ' + i + '\n')
-        line += 1
-    
-    reply = read_file(rans,True)
-    
-    if reply != [] :
-        write_debug('Completed command: ' + cmdis + '.\n')
+    while retries > 0 :
+        delete_file(rans)
+
+        cmd = open(rask,'w')
+        cmd.write(command)
+        cmd.close()
+
+        cmdis = command.splitlines()[0]
+
+        write_debug('Wrote command: ' + cmdis + ' to ' + rask + '.\n')
+
         line = 1
-        for i in reply :
-            write_debug('rans line ' + str(line) + ': ' + i + '\n')
+        for i in command.splitlines() :
+            write_debug('rask line ' + str(line) + ': ' + i + '\n')
             line += 1
-    else :
-        write_debug('Did not complete command: ' + cmdis + ' successfully.\n')
-    
+
+        reply = read_file(rans,True)
+
+        if reply != [] :
+            a = retrycnt - (retries - 1)
+            write_debug('Completed command: ' + cmdis + ' after ' + str(a) + ' tries.\n')
+            line = 1
+            for i in reply :
+                write_debug('rans line ' + str(line) + ': ' + i + '\n')
+                line += 1
+            retries = 0
+        else :
+            write_debug('Did not complete command: ' + cmdis + ' successfully.\n')
+            retries -= 1
+            write_debug('Retrying ' + str(retries) + ' more times!\n')
+
     rootque.put('kill')
     return(reply)
