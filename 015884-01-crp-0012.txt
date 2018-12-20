@@ -1,0 +1,15 @@
+SPCStor00=Piezas>01
+SPCStor01=OperNum>0000
+SPCStor02=Mystery>00029
+SPCStor03=PiezDone>00
+SPCStor04=PartNum>660900
+SPCStor05=FaseNam>PREM
+SPCStor06=SPCUpld>1
+SPCStor07=UseSPC>1
+SPCStor08=FaseNum>01
+SPCStor09=LanzNum>015884
+SPCStor10=MaqNum>0012
+SPCStor11=CntrlNum>2
+SPCStor12=SPCFile>C:\Resultats SPC\Partial SPC\015884-01-CRP-0012.txt
+SPCStor13=SPCErr>C:\Resultats SPC\Partial SPC\Error\
+SPCStor14=FullPrtNm>660900.B2

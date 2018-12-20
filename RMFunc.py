@@ -39,7 +39,7 @@ def delete_file(file) :
         return(did)
 
     a = 0
-    while os.path.isfile(file) and a <= 3 :
+    while os.path.isfile(file) and a <= 1 :
         try :
             os.remove(file)
         except OSError :
@@ -165,3 +165,25 @@ def comm1(command) :
 
     rootque.put('kill')
     return(reply)
+
+
+#Write a file (misc, no specific format)
+#Pass[0]: File data as a list
+#Pass[1]: Directory to write, including file name
+#Pass[2]: optional : True or False to delete the file if it already exists
+
+def write_file(what,where,delete=False) :
+    
+    if delete :
+        delete_file(where)
+    
+    line = 1
+    cmd = open(where,'w')
+    for i in what :
+        cmd.write(str(i) + '\n')
+        write_debug('rans line ' + str(line) + ': ' + i + '\n')
+        line += 1
+    cmd.close()
+
+    write_debug('Wrote file: ' + where + '.\n')
+    return()
