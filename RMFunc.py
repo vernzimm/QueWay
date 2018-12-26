@@ -124,6 +124,23 @@ def read_file(file,delete) :
     return(data)
 
 
+#Wait loop to read a file using read_file. Args are passed thru directly.
+#Pass [0]: file path variable
+#Pass [1]: True or False delete the file
+#Return [0]: returned file data
+
+def wait_read(file,delete) :
+    
+    result = []
+    while result == [] :
+        print('waiting for read msg')
+        result = read_file(file,delete)
+        time.sleep(1)
+
+    rootque.put('kill')
+    return(result)
+        
+
 #Do comm1 one style command (rask->rans)
 #Pass[0]: RM command
 #Return[0]: RM answer data
