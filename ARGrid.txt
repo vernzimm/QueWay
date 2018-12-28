@@ -1,0 +1,30 @@
+###Grid definition file for QueWay###
+###Use '#' to ignore lines###
+
+#Display name of this grid in QueWay
+#example: gridname = Ames Reese Grid
+gridname = Ames Reese Grid
+
+#Origin coordinate number from MCosmos for start of grid
+#example: homecoord = 1000
+homecoord = 1000
+
+#X-axis and Y-axis distance from home coordinate to first grid location.
+#Set to 0 if the origin location is the same as first grid.
+#example: homeoffx = 35
+#         homeoffy = 0
+homeoffx = 65
+homeoffy = 35
+
+#X-axis and Y-axis distance from one grid location to the next.
+#example: gridoffx = 80
+#         gridoffy = 65
+gridoffx = 80
+gridoffy = 65
+
+#Number of columns (parallel to y-axis) and rows (parallel to x-axis)
+#The following would give a total of 30 grid locations.
+#example: numofcols = 5
+#         numofrows = 6
+numofcols = 5
+numofrows = 6
