@@ -107,8 +107,7 @@ def read_file(file,delete) :
     try :
         b = open(file,'r')
         for i in b :
-            #scrub the '/n's
-            e = i[:-1]
+            e = i.rstrip()
             data = data + [e]
             a += 1
         b.close()
@@ -142,12 +141,18 @@ def wait_read(file,delete) :
         
 
 #Do comm1 one style command (rask->rans)
-#Pass[0]: RM command
+#Pass[0]: Directory to use to communicate
+#Pass[1]: RM command
 #Return[0]: RM answer data
 
-def comm1(command) :
+def comm1(commloc,command) :
     
     retries = retrycnt
+    
+    rask = commloc + 'REMOTE.ASK'
+    rans = commloc + 'REMOTE.ANS'
+    
+    command = command + '\n'
     
     while retries > 0 :
         delete_file(rans)
@@ -184,7 +189,7 @@ def comm1(command) :
     return(reply)
 
 
-#Write a file (misc, no specific format)
+#Write a file (misc, no specific format). Writes a tmp file first to complete, then copies.
 #Pass[0]: File data as a list
 #Pass[1]: Directory to write, including file name
 #Pass[2]: optional : True or False to delete the file if it already exists
@@ -194,13 +199,18 @@ def write_file(what,where,delete=False) :
     if delete :
         delete_file(where)
     
+    tmp = where.rsplit(sep = '\\', maxsplit = 1)
+    tmp = tmp[0] + '\\temp' + tmp[1]
+    
     line = 1
-    cmd = open(where,'w')
+    cmd = open(tmp,'w')
     for i in what :
         cmd.write(str(i) + '\n')
         write_debug('rans line ' + str(line) + ': ' + i + '\n')
         line += 1
     cmd.close()
-
+    
+    copy(tmp,where)
+    
     write_debug('Wrote file: ' + where + '.\n')
     return()

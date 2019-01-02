@@ -32,6 +32,8 @@ def load_settings(watfile,watvars) :
                         c = c + [j[1]]
                     elif k == 'gridfile' :
                         d = d + [j[1]]
+                    elif k == 'retrycnt' :
+                        b[k] = int(j[1])
                     else :
                         b[k] = j[1]
     
