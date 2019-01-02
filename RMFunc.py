@@ -148,7 +148,7 @@ def wait_read(file,delete) :
 def comm1(commloc,command) :
     
     retries = retrycnt
-    
+
     rask = commloc + 'REMOTE.ASK'
     rans = commloc + 'REMOTE.ANS'
     

@@ -34,6 +34,10 @@ def load_settings(watfile,watvars) :
                         d = d + [j[1]]
                     elif k == 'retrycnt' :
                         b[k] = int(j[1])
+                    elif j[1] == 'True' :
+                        b[k] = True
+                    elif j[1] == 'False' :
+                        b[k] = False
                     else :
                         b[k] = j[1]
     
