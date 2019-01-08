@@ -1,0 +1,3 @@
+Change grid image to ./ directory like offline
+Error on no find main comm directory
+Build /Out/ folder if no there
