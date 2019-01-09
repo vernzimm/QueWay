@@ -1,5 +1,6 @@
 Change grid image to ./ directory like offline
 Error on no find main comm directory
-Build /Out/ folder if no there
 "Done" wrong part. Running part 1, added 2 and 3. Received PPEND, but applied DONE to part 2 instead of part 1.
 Write info back to QueWay from MCosmos as parts are finished. Do SPC compile there? Not very generic...
+Handle multiple programs in one part program listing
+If doing multiple samples (manual sample size set), make individual entries in que list.
