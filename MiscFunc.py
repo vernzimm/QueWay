@@ -10,7 +10,7 @@ from __main__ import *
 
 def load_settings(watfile,watvars) :
 	
-	test_dir(watfile,False)
+	test_dir(watfile)
 	watfile = clean_win_path(watfile)
 	e = watfile.rsplit('/',1)[1]
 	
@@ -62,7 +62,7 @@ def load_settings(watfile,watvars) :
 #Pass[1]: True or False to make the file or path if it doesn't exist
 #Return[0]: True or False exists (assumed was made if didn't exist etc)
 
-def test_dir(watpath,domake) :
+def test_dir(watpath,domake=False) :
 	
 	b = clean_win_path(watpath)
 	
@@ -85,9 +85,9 @@ def test_dir(watpath,domake) :
 				c = ''
 				for i in b.split('/') :
 					c = c + i + '/'
-					if not test_dir(c,False) :
+					if not test_dir(c) :
 						d = c.rsplit('/',1)[0]
-						e = test_dir(d,False)
+						e = test_dir(d)
 						if e :
 							write_debug('A file \"' + d + '\" exists and a folder \"' + c + '\" can not be made!\n')
 							raise
@@ -122,6 +122,20 @@ def clean_win_path(inpath) :
 	for i in inpath :
 		if i == '\\' :
 			b = b + '/'
+		else :
+			b = b + i
+		
+	return(b)
+	
+#Change backslash to forward for path strings
+#Pass[0]: path
+#Return[0]: windows'd path
+def do_win_path(inpath) :
+
+	b = ''
+	for i in inpath :
+		if i == '/' :
+			b = b + '\\'
 		else :
 			b = b + i
 		
