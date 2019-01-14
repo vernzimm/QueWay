@@ -4,3 +4,4 @@ Error on no find main comm directory
 Write info back to QueWay from MCosmos as parts are finished. Do SPC compile there? Not very generic...
 Handle multiple programs in one part program listing
 If doing multiple samples (manual sample size set), make individual entries in que list.
+Sample size adds 1 for first part if touched before placing part, but stays 1 after.
