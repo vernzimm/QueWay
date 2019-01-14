@@ -216,6 +216,7 @@ def write_file(what,where,delete=False) :
 	cmd.close()
 	
 	copy(tmp,where)
-	
+	delete_file(tmp)
+
 	write_debug('Wrote file: ' + where + '.\n')
 	return()
