@@ -1,12 +1,13 @@
 Change grid image to ./ directory like offline
 Error on no find main comm directory
-"Done" wrong part. Running part 1, added 2 and 3. Received PPEND, but applied DONE to part 2 instead of part 1.
 Write info back to QueWay from MCosmos as parts are finished. Do SPC compile there? Not very generic...
 Handle multiple programs in one part program listing
 If doing multiple samples (manual sample size set), make individual entries in que list.
 Sample size adds 1 for first part if touched before placing part, but stays 1 after.
 Allow multiple search terms for directory list find
+Force job number etc to be x digits long after entry
 
+"Done" wrong part. Running part 1, added 2 and 3. Received PPEND, but applied DONE to part 2 instead of part 1.
 Que is: ('491100.A7 PREM RV1.0>2-3>RUNNING', '491100.A7 PREM RV1.0>5-6-7-8>FRESH').
 Que selection #0(491100.A7 PREM RV1.0>0-1>DONE) was deleted.
 Que is: ('491100.A7 PREM RV1.0>2-3>RUNNING',).
