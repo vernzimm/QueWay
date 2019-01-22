@@ -2,81 +2,9 @@ DONE - Change grid image to ./ directory like offline
 DONEish - Handle multiple programs in one part program listing
 DONE - Sample size adds 1 for first part if touched before placing part, but stays 1 after.
 DONE - Force job number etc to be x digits long after entry
+DONEish - "Done" wrong part. Running part 1, added 2 and 3. Received PPEND, but applied DONE to part 2 instead of part 1.
 Error on no find main comm directory
 Write info back to QueWay from MCosmos as parts are finished. Do SPC compile there? Not very generic...
 If doing multiple samples (manual sample size set), make individual entries in que list.
 Allow multiple search terms for directory list find
-
-
-"Done" wrong part. Running part 1, added 2 and 3. Received PPEND, but applied DONE to part 2 instead of part 1.
-Que is: ('491100.A7 PREM RV1.0>2-3>RUNNING', '491100.A7 PREM RV1.0>5-6-7-8>FRESH').
-Que selection #0(491100.A7 PREM RV1.0>0-1>DONE) was deleted.
-Que is: ('491100.A7 PREM RV1.0>2-3>RUNNING',).
-Que selection #1(491100.A7 PREM RV1.0>5-6-7-8>FRESH) was deleted.
-Que is running. Que run state: RUN.
-equelist.get is['']
-second set quenow is 1
-second set equelist size is 1
-third set quenow is 0
-third set equelist size is 1
-equelist.get is['491100.A7 PREM RV1.0', '2-3', 'RUNNING']
-Looping to top of que.
-do not have file: C:/Users/vernz/Desktop/QueWay/Offline/REMOTE.MSG after 5.01 seconds.
-491100.A7 PREM RV1.0 is currently selected.
-Image Thumb set to: C:\Users\vernz\Desktop\QueWay\Offline\offline.jpg
-Set part#: 491100, full part#: 491100.A7 and phase name: PREM.
-Button #5 was pressed.
-Set to part: 491100.A7 PREM RV1.0 and image set to: offline.jpg.
-The object state was switched to: disabled.
-The Queue object state was switched to: normal.
-The object state was switched to: disabled.
-Sample Size set to: 1.
-Now holding this/these buttons: 5.
-Button #6 was pressed.
-Set to part: 491100.A7 PREM RV1.0 and image set to: offline.jpg.
-Sample Size set to: 2.
-Now holding this/these buttons: 5-6.
-OK! gridinfo: 5-6.
-OK! jobnum: 1.
-OK! phasenum: 1.
-OK! controlnum: 2.
-OK! machnum: 1.
-OK! samsize: 2.
-OK! partnum: 491100.
-OK! fullpartnum: 491100.A7.
-OK! phasenam: PREM.
-The 0 object state was switched to: disabled.
-The 0 object state was switched to: disabled.
-Que is: ('491100.A7 PREM RV1.0>2-3>RUNNING', '491100.A7 PREM RV1.0>5-6>FRESH').
-The object state was switched to: normal.
-The Queue object state was switched to: disabled.
-The object state was switched to: normal.
-Passed hold (491100.A7 PREM RV1.0>5-6) to que, cleared SPC values, and set buttons to disabled.
-do not have file: C:/Users/vernz/Desktop/QueWay/Offline/REMOTE.MSG after 5.01 seconds.
-have file: C:/Users/vernz/Desktop/QueWay/Offline/REMOTE.MSG after 3.77 seconds.
-have file: C:/Users/vernz/Desktop/QueWay/Offline/REMOTE.MSG after 2.04 seconds.
-C:/Users/vernz/Desktop/QueWay/Offline/REMOTE.MSG is not locked after 0.01 seconds.
-C:/Users/vernz/Desktop/QueWay/Offline/REMOTE.MSG is not locked after 0.01 seconds.
-Did read 1 lines from: C:/Users/vernz/Desktop/QueWay/Offline/REMOTE.MSG.
-did delete: C:/Users/vernz/Desktop/QueWay/Offline/REMOTE.MSG after 0.01 seconds.
-the result of read file is: ['PPEND'].
-Currently running 491100.A7 PREM RV1.0.
-the result of read file is: ['PPEND'].
-Currently running 491100.A7 PREM RV1.0.
-Que is running. Que run state: PPEND.
-Que is: ('491100.A7 PREM RV1.0>2-3>RUNNING',).
-Que is: ('491100.A7 PREM RV1.0>2-3>RUNNING', '491100.A7 PREM RV1.0>5-6>DONE').
-Changed 491100.A7 PREM RV1.0>5-6>FRESH to 491100.A7 PREM RV1.0>5-6>DONE.
-491100.A7 PREM RV1.0 ran successfully.
-Starting next in que:  .
-Que is running. Que run state: READY.
-equelist.get is['']
-second set quenow is 2
-second set equelist size is 2
-third set quenow is 0
-third set equelist size is 2
-equelist.get is['491100.A7 PREM RV1.0', '2-3', 'RUNNING']
-Looping to top of que.
-Que is: ('491100.A7 PREM RV1.0>5-6>DONE',).
-Que is: ('491100.A7 PREM RV1.0>2-3>ACTIVE', '491100.A7 PREM RV1.0>5-6>DONE').
-Changed 491100.A7 PREM RV1.0>2-3>RUNNING to 491100.A7 PREM RV1.0>2-3>ACTIVE.
+Zero pad other SPC entries (mach num, phase) b/c they go straight in.
