@@ -8,3 +8,6 @@ DONE - Zero pad other SPC entries (mach num, phase) b/c they go straight in.
 Write info back to QueWay from MCosmos as parts are finished. Do SPC compile there? Not very generic...
 If doing multiple samples (manual sample size set), make individual entries in que list.
 Allow multiple search terms for directory list find
+Got stuck with run set to PPEND instead of resetting to RUN, so new part wouldn't start. I think it was running something and canceled during run, so didn't complete.
+Sort up-coming que list
+Statistics information about whatever possible.
