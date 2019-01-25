@@ -150,20 +150,22 @@ def wait_read(file,delete) :
 
 def comm1(commloc,command) :
 	
+	print('commloc is:' + commloc + '\n')
+	print('command is:' + command + '\n')
 	retries = retrycnt
 	commloc = clean_win_path(commloc)
 	rask = commloc + 'REMOTE.ASK'
 	rans = commloc + 'REMOTE.ANS'
 	
 	command = command + '\n'
-	
+	print('retries is:' + str(retries) + '\n')
 	while retries > 0 :
 		delete_file(rans)
-
+		print('Did delete rask.\n')
 		cmd = open(rask,'w')
 		cmd.write(command)
 		cmd.close()
-
+		print('Did close rask write.\n')
 		cmdis = command.splitlines()[0]
 
 		write_debug('Wrote command: ' + cmdis + ' to ' + rask + '.\n')
@@ -172,9 +174,9 @@ def comm1(commloc,command) :
 		for i in command.splitlines() :
 			write_debug('rask line ' + str(line) + ': ' + i + '\n')
 			line += 1
-
+		print('Will read file rans.\n')
 		reply = read_file(rans,True)
-
+		print('Did read file rans and is: ' + rans + '.\n')
 		if reply != [] :
 			a = retrycnt - (retries - 1)
 			write_debug('Completed command: ' + cmdis + ' after ' + str(a) + ' tries.\n')
@@ -187,7 +189,7 @@ def comm1(commloc,command) :
 			write_debug('Did not complete command: ' + cmdis + ' successfully.\n')
 			retries -= 1
 			write_debug('Retrying ' + str(retries) + ' more times!\n')
-
+		print('retries is:' + str(retries) + '\n')
 	return(reply)
 
 
