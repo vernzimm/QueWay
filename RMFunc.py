@@ -140,7 +140,6 @@ def wait_read(file,delete) :
 		result = read_file(file,delete)
 		time.sleep(1)
 
-	rootque.put('kill')
 	return(result)
 	
 
@@ -189,7 +188,6 @@ def comm1(commloc,command) :
 			retries -= 1
 			write_debug('Retrying ' + str(retries) + ' more times!\n')
 
-	rootque.put('kill')
 	return(reply)
 
 
