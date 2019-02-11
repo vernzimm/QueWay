@@ -11,3 +11,5 @@ Allow multiple search terms for directory list find
 Got stuck with run set to PPEND instead of resetting to RUN, so new part wouldn't start. I think it was running something and canceled during run, so didn't complete.
 Sort up-coming que list
 Statistics information about whatever possible.
+Use HeadData to pass information into program. Can update while program runs, prog can also save to and QueWay could read out. Global names defined in HeadData.ini in \INI. These are also accesible by ProtocolManager to put on report etc.
+Pass results to QueWay rather than subprg to manage lots and partial checks. Display results on finish and allow operator to accept for SPC or reject if some error, need to re-check etc.
