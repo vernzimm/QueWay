@@ -199,7 +199,7 @@ def root_loop(cmd = '',*args) :
 			write_debug('Did \"' + str(cmd[0]).split(' ')[1] + '\" root loop for ' + str(c) + ' seconds\n')
 	
 	try :
-		print('a result is: ' + a.result() + '\n')
+		print('a result is: ' + str(a.result()) + '\n')
 	except :
 		print('excepted during print a.result()\n')
 	

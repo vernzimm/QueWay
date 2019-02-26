@@ -149,7 +149,7 @@ def wait_read(file,delete) :
 #Return[0]: RM answer data
 
 def comm1(commloc,command) :
-	
+
 	print('commloc is:' + commloc + '\n')
 	print('command is:' + command + '\n')
 	retries = retrycnt
