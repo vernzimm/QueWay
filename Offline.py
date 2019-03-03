@@ -61,7 +61,7 @@ pics = ['offline.jpg','grid.jpg']
 for i in pics :
 	imgloc = clean_win_path(qwdir + i)
 	b = test_dir(imgloc)
-	c = clean_win_path(os.getcwd() + i)
+	c = clean_win_path(os.getcwd() + '\\' + i)
 	
 	if not b :
 		try :
