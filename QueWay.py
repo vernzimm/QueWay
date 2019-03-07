@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
 
 #Open debug file and write whatever in it, also write to the console.
 #Pass[0]: debug data to write
-#Set[0]: insert new line in econsole
+#Set[0]: put debug into rootque for console.
 
 def write_debug(data) :
 	
@@ -15,20 +13,8 @@ def write_debug(data) :
 	for i in data :
 		a = str(datetime.datetime.now()) + ': ' + i + '\n'
 		b = b + a
-		
 		c = i + '\n'
-
-		if runloop and not mainloop :
-			try :
-				rootque.put(c)
-			except :
-				raise
-		else :
-			try :
-				econsole.insert(tk.END,c)
-				econsole.see(tk.END)
-			except :
-				raise
+		rootque.put(c)
 
 	if writedbg :
 		try :
@@ -37,39 +23,46 @@ def write_debug(data) :
 			debug.close()
 		except :
 			d = 'Exception trying to write to ' + ddir + '!\n'
-			if runloop and not mainloop :
-				try :
-					rootque.put(d)
-				except :
-					raise
-			else :
-				try :
-					econsole.insert(tk.END,d)
-					econsole.see(tk.END)
-				except :
-					raise
+			rootque.put(d)
 	
 	return()
 
+#Run as a separate thread and try getting from rootque and putting in console.
+#Set[0]: insert last line (if any) from rootque in econsole.
 
-# In[ ]:
+def rootque_loop():
+	
+	a = 'set'
+	while a != '' :
+		try :
+			a = rootque.get(block = False)
+			econsole.insert(tk.END,a)
+			econsole.see(tk.END)
+		except :
+			a = ''
+			
+		if current_thread() is main_thread():
+			root.update()
+			
+		time.sleep(0.05)
+
 
 
 import os
 import time
 import datetime
 import csv
-#import numpy as np
-#import pandas as pd
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image as imgget
 from PIL import ImageTk
 from concurrent.futures import ThreadPoolExecutor as TPEx
+from threading import current_thread, main_thread
 import queue
 import subprocess as sub
 import sys
 from shutil import copy
+import logging as log
 
 writedbg = True
 runloop = True
@@ -86,7 +79,7 @@ root.resizable(False, False)
 econsole = tk.Text(root, width = 120, height = 8, exportselection = False, wrap = tk.WORD)
 econsole.grid(column = 0, row = 2, columnspan = 3, sticky = (tk.N, tk.S, tk.W, tk.E))  
 
-root.update()
+rootque_loop()
 
 rootx = econsole.winfo_width() + 12
 rooty = econsole.winfo_height() + 12
@@ -95,7 +88,7 @@ pady = (root.winfo_screenheight() - rooty) / 2
 root.geometry(str(rootx) + 'x' + str(rooty) + '+' + str(int(padx)) + '+' + str(int(pady)))
 for child in root.winfo_children(): child.grid_configure(padx = 6, pady = 6)
 
-root.update()
+rootque_loop()
 
 os.system("python ./MiscFunc.py")
 from MiscFunc import *
@@ -139,7 +132,6 @@ for i in range(len(gridfiles)) :
 if not havgrid :
 	do_kill('No grid files')
 
-#spcdata = pd.DataFrame(columns = spcnames)
 
 #Load Phases - ToDo: merge this into general data matching
 haveps = root_loop(test_dir,'./phases.txt')
@@ -199,7 +191,6 @@ if offline :
 #Get HELP List (test out RM connect and print list of available commands to debug)
 def test_comm() :
 
-	#reply = TPEx().submit(comm1,qwdir,'HELP')
 	reply = comm1(qwdir,'HELP')
 	pid = 0
 	
@@ -297,9 +288,6 @@ if not havespcdir :
 spcdir = spcdir + 'spc.txt'
 rmsg = qwdir + 'REMOTE.MSG'
 spcdata = {}
-
-
-# In[ ]:
 
 
 def show_button_img(button_group) :
@@ -655,7 +643,6 @@ def add_que() :
 	machnum.set(pad_num(machnum.get(),4))
 	
 	e = [gridnums.get(),jobnum.get(),phasenum.get(),controlnum.get(),machnum.get(),samsize.get(),partnum.get(),fullpartnum.get(),phasenam.get()]
-	#was (with pandas) e = [[a,b,c]]
 	
 	queok = True
 	g = 0
@@ -689,8 +676,6 @@ def add_que() :
 		
 		write_debug('Passed hold (' + d + ') to que, cleared SPC values, and set buttons to disabled.\n')
 		
-		#e = pd.DataFrame(e, index = [d], columns = spcnames)
-		#spcdata = spcdata.append(e)
 		spcdata[d] = {}
 		eloc = 0
 		for i in spcnames :
@@ -724,7 +709,6 @@ def del_que(a) :
 	c = b.split(sep = '>')
 	
 	global spcdata
-	#spcdata = spcdata.drop(index = [c[0] + '>' + c[1]])
 	spcdata.pop(str(c[0] + '>' + c[1]), None)
 	
 	write_debug('Que selection #' + str(a) + '(' + b + ') was deleted.\n')
@@ -864,7 +848,6 @@ def play_que(*args) :
 				if len(reply) != 0 :
 					if reply[0] == 'OK' :
 
-						#spc = spcdata.loc[str(a[0] + '>' + a[1])]
 						spc = spcdata[str(a[0] + '>' + a[1])]
 						write = []
 						index = 0
@@ -1206,29 +1189,5 @@ root.maxsize(root.winfo_screenwidth()-10,root.winfo_screenheight()-10)
 root.geometry('1280x720')
 
 mainloop = True
-print(mainloop)
 epartfind.focus()
 root.mainloop()
-
-#Change imgthumb and grid buttons from buttons to something else and use a bind on click?
-
-
-# In[ ]:
-
-
-#a = ['z','y','x']
-#b = ['apple','pudding','pie']
-#c = {}
-#d = 'thingone'
-#c[d] = {}
-#loca = 0
-#for i in b :
-#    c[d][i] = a[loca]
-#    loca += 1
-
-
-# In[ ]:
-
-
-
-

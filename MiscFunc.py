@@ -145,7 +145,6 @@ def do_win_path(inpath) :
 #Pass[0]: String of reason for killing(optional)
 def do_kill(method='error') :
 
-	globals()['runloop'] = False
 	time.sleep(1)
 	write_debug('The program will now close! Reason: ' + method + '.\n')
 	time.sleep(0.05)
@@ -153,58 +152,6 @@ def do_kill(method='error') :
 	try :
 		root.destroy()
 	except :
-		raise
+		pass
 		
 	exit()
-
-#Loop main application while waiting for reply from thread
-#Pass[0]: function name to call with threading
-#Pass[1+]: args for function
-def root_loop(cmd = '',*args) :
-	
-	if cmd != '' :
-		cmd = [cmd]
-		for i in args :
-			cmd = cmd + [i]
-	
-		write_debug('Threaded the command \"' + str(cmd[0]).split(' ')[1] + '\" with args ' + str(args) + '\n')
-		a = TPEx(max_workers=1).submit(*cmd)
-	
-	globals()['runloop'] = True
-	global mainloop
-	
-	print('mainloop = ' + str(mainloop) + '\n')
-	b = ''
-	c = 0.0
-	d = 0.01
-	print('runloop = ' + str(runloop) + '\n')
-	while not a.done() :
-
-		try :
-			b = rootque.get(block = False)
-			print('rootque get: ' + str(b) + '\n')
-			if not mainloop :
-				econsole.insert(tk.END,b)
-				econsole.see(tk.END)
-			root.update()
-			print('did root update\n')
-			c += d
-		except :
-			time.sleep(d)
-			c += d
-		
-
-		c = round(c,2)
-		if c % 3 == 0 :
-			write_debug('Did \"' + str(cmd[0]).split(' ')[1] + '\" root loop for ' + str(c) + ' seconds\n')
-	
-	try :
-		print('a result is: ' + str(a.result()) + '\n')
-	except :
-		print('excepted during print a.result()\n')
-	
-	write_debug('Done \"' + str(cmd[0]).split(' ')[1] + '\" root loop in ' + str(c) + ' seconds\n')
-	time.sleep(0.05)
-	globals()['runloop'] = False
-	print('runloop = ' + str(runloop) + '\n')
-	return(a.result())
