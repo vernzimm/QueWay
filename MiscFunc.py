@@ -127,6 +127,7 @@ def clean_win_path(inpath) :
 		
 	return(b)
 	
+	
 #Change backslash to forward for path strings
 #Pass[0]: path
 #Return[0]: windows'd path
@@ -141,13 +142,14 @@ def do_win_path(inpath) :
 		
 	return(b)
 
+
 #Kill/quit application
 #Pass[0]: String of reason for killing(optional)
 def do_kill(method='error') :
 
 	time.sleep(1)
 	write_debug('The program will now close! Reason: ' + method + '.\n')
-	time.sleep(0.05)
+	time.sleep(1)
 	
 	try :
 		root.destroy()
@@ -155,3 +157,40 @@ def do_kill(method='error') :
 		pass
 		
 	exit()
+
+
+#Loop main application while waiting for reply from thread
+#Pass[0]: function name to call with threading
+#Pass[1+]: args for function
+def root_loop(cmd = '',*args) :
+
+	if cmd != '' :
+		cmd = [cmd]
+		for i in args :
+			cmd = cmd + [i]
+
+		write_debug('Threaded the command \"' + str(cmd[0]).split(' ')[1] + '\" with args ' + str(args) + '\n')
+		a = TPEx(max_workers=1).submit(*cmd)
+
+	b = time.time()
+	c = 0.01
+	didthree = False
+	while not a.done() :
+
+		if current_thread() is main_thread() :
+			root.event_generate('<<econ_add>>')
+		else :
+			time.sleep(0.01)
+		
+		c = round((time.time() - b),2)
+		
+		if int(c) % 3 == 0 and int(c) != 0 :
+			if not didthree :
+				write_debug('Did \"' + str(cmd[0]).split(' ')[1] + '\" root loop for ' + str(int(c)) + ' seconds\n')
+				didthree = True
+		else :
+			didthree = False
+
+	write_debug('Done \"' + str(cmd[0]).split(' ')[1] + '\" root loop in ' + str(c) + ' seconds\n')
+
+	return(a.result())

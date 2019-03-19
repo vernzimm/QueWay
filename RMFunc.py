@@ -7,28 +7,28 @@ from __main__ import *
 def have_file(file) :
 
 	file = clean_win_path(file)
+
+	a = time.time()
 	b = 0
-	d = 0
-	while b <= 500 :
+	get = False
+	while b < 2 and not get :
 		get = os.path.isfile(file)
-		if get == True :
-			break
 		time.sleep(0.01)
-		d += 0.01
-		b += 1
-	d = str(round(d,2))
+		b = time.time() - a
+
+	b = str(round(b,2))
 	
-	if get == True :
-		write_debug('have file: ' + file + ' after ' + d + ' seconds.\n')
-	else :   
-		write_debug('do not have file: ' + file + ' after ' + d + ' seconds.\n')
-		
+	if get :
+		write_debug('have file: ' + file + ' after ' + b + ' seconds.\n')
+	else :
+		write_debug('do not have file: ' + file + ' after ' + b + ' seconds.\n')
+	
 	return(get)
 
 
 #Delete a file
 #Pass [0]: file path variable
-#Return [0]: True or False did delete file (under 3 seconds)
+#Return [0]: True or False did delete file
 
 def delete_file(file) :
 
@@ -40,21 +40,23 @@ def delete_file(file) :
 		
 		return(did)
 
-	a = 0
-	while os.path.isfile(file) and a <= 1 :
+	a = time.time()
+	b = 0
+	while os.path.isfile(file) and b < 2 :
 		try :
 			os.remove(file)
 		except OSError :
 			time.sleep(0.01)
-		a += 0.01
 		
-	a = str(round(a,2))
-	
+		b = time.time() - a
+		
+	b = str(round(b,2))
 	did = not os.path.isfile(file)
+	
 	if did :
-		write_debug('did delete: ' + file + ' after ' + a + ' seconds.\n')
+		write_debug('did delete: ' + file + ' after ' + b + ' seconds.\n')
 	else :
-		write_debug('could not delete: ' + file + ' after ' + a + ' seconds and file exists = ' + str(os.path.isfile(file)) + '.\n')
+		write_debug('could not delete: ' + file + ' after ' + b + ' seconds and file exists = ' + str(os.path.isfile(file)) + '.\n')
 
 	return(did)
 
@@ -66,25 +68,27 @@ def delete_file(file) :
 def is_locked(file):
 	
 	file = clean_win_path(file)
-	locked = True
-	d = 0
-	while locked and d < 3 :
-		try:
-			a = open(file, 'a', 8)
-			if a :
-				locked = False
-				a.close()
-		except IOError:
-			locked = True
-			time.sleep(0.01)
-		d += 0.01
 
-	d = str(round(d,2))
+	a = time.time()
+	b = 0
+	locked = True
+	while locked and b < 2 :
+		try:
+			c = open(file, 'a', 8)
+			if c :
+				locked = False
+				c.close()
+		except IOError:
+			time.sleep(0.01)
+		
+		b = time.time() - a
+
+	b = str(round(b,2))
 	
 	if locked :
-		write_debug(file + ' is still locked after ' + d + ' seconds.\n')
+		write_debug(file + ' is still locked after ' + b + ' seconds.\n')
 	else :
-		write_debug(file + ' is not locked after ' + d + ' seconds.\n')
+		write_debug(file + ' is not locked after ' + b + ' seconds.\n')
 
 	return (locked)
 
@@ -138,7 +142,7 @@ def wait_read(file,delete) :
 	result = []
 	while result == [] :
 		result = read_file(file,delete)
-		time.sleep(1)
+		time.sleep(0.5)
 
 	return(result)
 	
@@ -150,22 +154,18 @@ def wait_read(file,delete) :
 
 def comm1(commloc,command) :
 
-	print('commloc is:' + commloc + '\n')
-	print('command is:' + command + '\n')
 	retries = retrycnt
 	commloc = clean_win_path(commloc)
 	rask = commloc + 'REMOTE.ASK'
 	rans = commloc + 'REMOTE.ANS'
 	
 	command = command + '\n'
-	print('retries is:' + str(retries) + '\n')
+
 	while retries > 0 :
 		delete_file(rans)
-		print('Did delete rask.\n')
 		cmd = open(rask,'w')
 		cmd.write(command)
 		cmd.close()
-		print('Did close rask write.\n')
 		cmdis = command.splitlines()[0]
 
 		write_debug('Wrote command: ' + cmdis + ' to ' + rask + '.\n')
@@ -174,9 +174,9 @@ def comm1(commloc,command) :
 		for i in command.splitlines() :
 			write_debug('rask line ' + str(line) + ': ' + i + '\n')
 			line += 1
-		print('Will read file rans.\n')
+
 		reply = read_file(rans,True)
-		print('Did read file rans and is: ' + rans + '.\n')
+
 		if reply != [] :
 			a = retrycnt - (retries - 1)
 			write_debug('Completed command: ' + cmdis + ' after ' + str(a) + ' tries.\n')
@@ -189,10 +189,10 @@ def comm1(commloc,command) :
 			write_debug('Did not complete command: ' + cmdis + ' successfully.\n')
 			retries -= 1
 			write_debug('Retrying ' + str(retries) + ' more times!\n')
-		print('retries is:' + str(retries) + '\n')
+
 	return(reply)
-
-
+	
+	
 #Write a file (misc, no specific format). Writes a tmp file first to complete, then copies.
 #Pass[0]: File data as a list
 #Pass[1]: Directory to write, including file name
@@ -211,7 +211,7 @@ def write_file(what,where,delete=False) :
 	cmd = open(tmp,'w')
 	for i in what :
 		cmd.write(str(i) + '\n')
-		write_debug('rans line ' + str(line) + ': ' + i + '\n')
+		write_debug('write line ' + str(line) + ': ' + i + '\n')
 		line += 1
 	cmd.close()
 	

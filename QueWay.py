@@ -4,7 +4,7 @@
 
 #Open debug file and write whatever in it, also write to the console.
 #Pass[0]: debug data to write
-#Set[0]: put debug into rootque for console.
+#Set[0]: put debug into debugque for console.
 
 def write_debug(data) :
 	
@@ -14,7 +14,7 @@ def write_debug(data) :
 		a = str(datetime.datetime.now()) + ': ' + i + '\n'
 		b = b + a
 		c = i + '\n'
-		rootque.put(c)
+		debugque.put(c)
 
 	if writedbg :
 		try :
@@ -23,29 +23,36 @@ def write_debug(data) :
 			debug.close()
 		except :
 			d = 'Exception trying to write to ' + ddir + '!\n'
-			rootque.put(d)
+			debugque.put(d)
+	
+	if current_thread() is main_thread():
+		root.event_generate('<<econ_add>>')
 	
 	return()
 
-#Run as a separate thread and try getting from rootque and putting in console.
-#Set[0]: insert last line (if any) from rootque in econsole.
+#Run as a separate thread and try getting from debugque and putting in console.
+#Set[0]: insert last line (if any) from debugque in econsole.
 
-def rootque_loop():
+def econadd_loop():
 	
 	a = 'set'
 	while a != '' :
 		try :
-			a = rootque.get(block = False)
-			econsole.insert(tk.END,a)
-			econsole.see(tk.END)
+			a = debugque.get(block = False)
 		except :
 			a = ''
-			
-		if current_thread() is main_thread():
-			root.update()
-			
-		time.sleep(0.05)
+		
+		if a != '' :
+			try :
+				econsole.insert(tk.END,a)
+				econsole.see(tk.END)
+			except :
+				pass
 
+		root.update()
+		time.sleep(0.01)
+
+	return()
 
 
 import os
@@ -62,15 +69,7 @@ import queue
 import subprocess as sub
 import sys
 from shutil import copy
-import logging as log
-
-writedbg = True
-runloop = True
-mainloop = False
-rootque = queue.Queue()
-
-ddir = os.getcwd() + '/debug.txt'
-write_debug('hello world')
+#import logging as log
 
 root = tk.Tk()
 root.title('QueWay')
@@ -79,7 +78,15 @@ root.resizable(False, False)
 econsole = tk.Text(root, width = 120, height = 8, exportselection = False, wrap = tk.WORD)
 econsole.grid(column = 0, row = 2, columnspan = 3, sticky = (tk.N, tk.S, tk.W, tk.E))  
 
-rootque_loop()
+root.bind('<<econ_add>>', lambda _: econadd_loop())
+
+writedbg = True
+debugque = queue.Queue()
+
+ddir = os.getcwd() + '/debug.txt'
+write_debug('hello world')
+
+root.update()
 
 rootx = econsole.winfo_width() + 12
 rooty = econsole.winfo_height() + 12
@@ -88,7 +95,7 @@ pady = (root.winfo_screenheight() - rooty) / 2
 root.geometry(str(rootx) + 'x' + str(rooty) + '+' + str(int(padx)) + '+' + str(int(pady)))
 for child in root.winfo_children(): child.grid_configure(padx = 6, pady = 6)
 
-rootque_loop()
+econadd_loop()
 
 os.system("python ./MiscFunc.py")
 from MiscFunc import *
@@ -520,7 +527,7 @@ def listbox_select() :
 	
 	write_debug('Set part#: ' + g + ', full part#: ' + h + ' and phase name: ' + j + '.\n')
 	
-	ebarcode.focus()
+	ebarcode.focus_set()
 	return()
 
 #Set grid button to current selection. Checks first if there is a listbox selection.
@@ -699,20 +706,23 @@ def del_que(a) :
 	
 	b = str(equelist.get(a))
 	b = b.split(sep = '>')
-	for i in b[1].split(sep = '-') :
-		change_state(buttlist[int(i)][0],'normal')
-		clear_button(buttlist[int(i)])
-		sample_entry('set')
+	if b[2] != 'RUNNING' :
+		for i in b[1].split(sep = '-') :
+			change_state(buttlist[int(i)][0],'normal')
+			clear_button(buttlist[int(i)])
+			sample_entry('set')
 
-	b = equelist.get(a)
-	equelist.delete(a)
-	c = b.split(sep = '>')
-	
-	global spcdata
-	spcdata.pop(str(c[0] + '>' + c[1]), None)
-	
-	write_debug('Que selection #' + str(a) + '(' + b + ') was deleted.\n')
-
+		b = equelist.get(a)
+		equelist.delete(a)
+		c = b.split(sep = '>')
+		
+		global spcdata
+		spcdata.pop(str(c[0] + '>' + c[1]), None)
+		
+		write_debug('Que selection #' + str(a) + '(' + b + ') was deleted.\n')
+	else :
+		write_debug('Can not delete que selection #' + str(a) + '(' + equelist.get(a) + ') because it is still running!\n')
+				
 	return()
 
 
@@ -837,12 +847,14 @@ def play_que(*args) :
 			neednew = a[2] == 'FRESH' or a[2] == 'ERROR'
 			if run == 'READY' and neednew :
 				
+				msg = qwdir + 'remote.msg'
+				delete_file(msg)
 				que_update(quenow,'ACTIVE')
 				d = a[1].split(sep = '-')
 				e = buttlist[int(d[0])][1].get()
 				g = proglist[e]['base_path']
 				msg = 'CHANGE_PART_DIR\n' + g + '\n'
-				print('msg is:' + msg + '\n')
+
 				reply = root_loop(comm1,qwdir,msg)
 
 				if len(reply) != 0 :
@@ -906,17 +918,9 @@ def play_que(*args) :
 
 			elif run == 'PPERR' and a[2] == 'RUNNING' :
 				que_update(quenow,'ERROR')
+				runinfo.set('READY')
 				write_debug(a[0] + ' did not run successfully!\n')
-			
-			#elif a[2] == 'FATAL' :
-				#write_debug('The program, ' + playwat + ' is FATAL and will be skipped!\n')
-			
-			#elif run != 'READY' :
-				#write_debug('Reply ' + str(run) + ' is unknown! Stopping the que.\n')
-				#que_update(quenow,'FATAL')
-				#runinfo.set('READY')
-				#playtog.set(False)
-		
+					
 		else :
 			write_debug('Congrats, ' + playwat + ' is already DONE!\n')
 		
@@ -1113,7 +1117,7 @@ def make_grid(a,b) :
 
 gridselect = 0
 buttlist = make_grid(gridfiles,gridselect)
-root.update()
+root.update_idletasks()
 
 blank = ttk.Label(quef, text = '')
 blank.grid(column = 0, row = 0, columnspan = 2)        
@@ -1188,6 +1192,6 @@ root.minsize(1280,720)
 root.maxsize(root.winfo_screenwidth()-10,root.winfo_screenheight()-10)
 root.geometry('1280x720')
 
-mainloop = True
+#mainloop = True
 epartfind.focus()
 root.mainloop()

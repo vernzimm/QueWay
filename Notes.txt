@@ -5,13 +5,12 @@ DONE - Force job number etc to be x digits long after entry
 DONEish - "Done" wrong part. Running part 1, added 2 and 3. Received PPEND, but applied DONE to part 2 instead of part 1.
 DONE - Error on no find main comm directory
 DONE - Zero pad other SPC entries (mach num, phase) b/c they go straight in.
+DONE(?) - Got stuck with run set to PPEND instead of resetting to RUN, so new part wouldn't start. I think it was running something and canceled during run, so didn't complete. If stop prg in MCosmos and get PPERR, but delete RUNNING part from que before setting to ERROR, it will stay in PPERR state and not start new part added to que (deleted all items from que including RUNNING, then added one back).
+
 Write info back to QueWay from MCosmos as parts are finished. Do SPC compile there? Not very generic...
 If doing multiple samples (manual sample size set), make individual entries in que list.
 Allow multiple search terms for directory list find
-Got stuck with run set to PPEND instead of resetting to RUN, so new part wouldn't start. I think it was running something and canceled during run, so didn't complete.
-Sort up-coming que list
+Sort que list
 Statistics information about whatever possible.
-Use HeadData to pass information into program. Can update while program runs, prog can also save to and QueWay could read out. Global names defined in HeadData.ini in \INI. These are also accesible by ProtocolManager to put on report etc.
+Use HeadData to pass information into program. Can update while program runs, prog can also save to and QueWay could read out. Global names defined in HeadData.ini in \INI. These are also accesible by ProtocolManager to put on report etc. Pass QueWay = 1 to part program header file to give earliest notification. Import header data for part (to have labels etc) and write new header item if QueWay item isn't there already.
 Pass results to QueWay rather than subprg to manage lots and partial checks. Display results on finish and allow operator to accept for SPC or reject if some error, need to re-check etc.
-If stop prg in MCosmos and get PPERR, but delete RUNNING part from que before setting to ERROR, it will stay in PPERR state and not start new part added to que (deleted all items from que including RUNNING, then added one back).
-Pass QueWay = 1 to part program header file to give earliest notification. Import header data for part (to have labels etc) and write new header item if QueWay item isn't there already.
